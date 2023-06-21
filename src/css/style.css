@@ -1,3 +1,39 @@
-body {
-    color: #999;
+.listContainer {
+    display: flex;
+    position: relative;
+}
+
+.column {
+    display: flex;
+    width: 300px;
+}
+
+.listItem.dragged {
+    position: absolute;
+    cursor: grabbing;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.item-item {
+    border: 1px solid green;
+}
+
+.deleteBtn {
+    background-image: url("/src/img/4115230-cancel-close-cross-delete_114048.svg");
+    background-repeat: no-repeat;
+    background-position: auto;
+    opacity: 0; 
+    visibility: hidden;
+}
+
+.closeWindow {
+    background-image: url("/src/img/4115230-cancel-close-cross-delete_114048.svg");
+    background-repeat: no-repeat;
+    background-position: auto;
+}
+
+.hidden {
+    opacity: 0; 
+    visibility: hidden;
 }
