@@ -1,11 +1,17 @@
-let listContainer = document.querySelector(".listContainer");
+const { doc } = require("prettier");
+
+const listContainer = document.querySelector(".listContainer");
+export const storedge = { done: [], toDo: [], inProgress: [] };
 
 listContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("deleteBtn")) {
-    e.target.closest("listItem").remove();
+    e.target.closest(".listItem").remove();
     return;
   }
   if (e.target.classList.contains("addItem")) {
+    if (document.querySelector(".createWindow")) {
+      return;
+    }
     e.target.classList.add("hidden");
     openCreateWindow(e);
     return;
@@ -22,34 +28,28 @@ listContainer.addEventListener("click", (e) => {
 
 function openCreateWindow(e) {
   let column = e.target.closest(".column");
-  console.log();
-  let html = `<tr class="createWindow"><td>
-    <input class="input" type="text">
+  let html = `<div class="createWindow">
+  <textarea class="input"></textarea>
     <button class="saveBtn">Add Card</button>
-    <button class="closeWindow"></button>
-  </td></tr>`;
-  column.firstElementChild.innerHTML += html;
+    <button class="cross closeWindow"></button></div>`;
+  column.insertAdjacentHTML("beforeEnd", html);
 }
 
 function saveNewItem(e) {
-  let input = e.target.previousElementSibling;
-  if (!input.value) {
+  let inputValue = e.target.previousElementSibling.value;
+  if (!inputValue) {
     return;
   }
   let column = e.target.closest(".column");
-  let html = `<tr class="listItem"><td><div class="item-item"><p>${input.value}</p></div></td></tr>`;
-  column.firstElementChild.innerHTML += html;
+  let html = `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${inputValue}</div></div>`;
+  column.insertAdjacentHTML("beforeEnd", html);
   closeWindow(e);
 }
 
 function closeWindow(e) {
-  let window = e.target.closest(".createWindow");
-  console.log(window)
-//   не работает
-//   document
-//     .querySelectorAll(".addItem")
-//     .forEach((btn) => btn.classList.remove("hidden"));
-    e.target.closest(".createWindow").remove();
+  let parent = e.target.closest(".column");
+  parent.querySelector(".addItem").classList.remove("hidden");
+  e.target.closest(".createWindow").remove();
 }
 
 listContainer.addEventListener("mouseover", (e) => {

@@ -1,107 +1,36 @@
-// TODO: write code here
-import { mdConvert } from "md-converter";
+import { storedge } from "./btnEvents";
 
-console.log("app.js bundled");
-
-const listContainer = document.querySelector(".file-container");
-const fileInput = listContainer.querySelector(".overlapped");
-
-const previewTitle = document.querySelector(".preview-title");
-const previewText = document.querySelector(".preview-text");
-const previewHtml = document.querySelector(".preview-html");
-const previewImage = document.querySelector(".preview-image");
-
-listContainer.addEventListener("click", (e) => {
-  console.log(e);
-
-  console.log("click");
-
-  fileInput.dispatchEvent(new MouseEvent("click"));
+window.addEventListener("beforeunload", () => {
+  document
+    .querySelector(".done")
+    .querySelectorAll(".item-item")
+    .forEach((el) => storedge.done.push(el.textContent));
+  document
+    .querySelector(".toDo")
+    .querySelectorAll(".item-item")
+    .forEach((el) => storedge.toDo.push(el.textContent));
+  document
+    .querySelector(".inProgress")
+    .querySelectorAll(".item-item")
+    .forEach((el) => storedge.inProgress.push(el.textContent));
+  localStorage.setItem("lists", JSON.stringify(storedge));
 });
 
-listContainer.addEventListener("dragover", (e) => {
-  e.preventDefault();
-});
-
-listContainer.addEventListener("drop", (e) => {
-  e.preventDefault();
-
-  console.log("drop");
-
-  previewImage.src = URL.createObjectURL(
-    e.dataTransfer.files && e.dataTransfer.files[0]
-  );
-});
-
-const displayTextContent = (e) => {
-  console.log(e);
-
-  previewText.textContent = e.target.result;
-};
-
-const displayMDTextContent = (e) => {
-  console.log(e);
-
-  previewHtml.innerHTML = mdConvert(e.target.result);
-};
-
-fileInput.addEventListener("change", (e) => {
-  console.log(e);
-  console.dir(fileInput);
-
-  const file = fileInput.files && fileInput.files[0];
-
-  if (!file) return;
-
-  previewTitle.textContent = file.name;
-
-  const url = URL.createObjectURL(file);
-
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.rel = "noopener";
-  link.download = file.name;
-
-  link.click();
-
-  console.log(url);
-});
-
-///////////////
-
-const items = document.querySelector(".items");
-
-const itemsElements = items.querySelector(".items-item");
-
-let actualElement;
-
-const onMouseOver = (e) => {
-  console.log(e);
-
-  actualElement.style.top = e.clientY + "px";
-  actualElement.style.left = e.clientX + "px";
-};
-
-const onMouseUp = (e) => {
-  const mouseUpItem = e.target;
-
-  items.insertBefore(actualElement, mouseUpItem);
-
-  actualElement.classList.remove("dragged");
-  actualElement = undefined;
-
-  document.documentElement.removeEventListener("mouseup", onMouseUp);
-  document.documentElement.removeEventListener("mouseover", onMouseOver);
-};
-
-items.addEventListener("mousedown", (e) => {
-  e.preventDefault();
-
-  actualElement = e.target;
-
-  actualElement.classList.add("dragged");
-
-  document.documentElement.addEventListener("mouseup", onMouseUp);
-  document.documentElement.addEventListener("mouseover", onMouseOver);
+window.addEventListener("load", () => {
+  let lists = JSON.parse(localStorage.getItem("lists"));
+  let html = "";
+  lists.done.forEach((item) => {
+        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
+    });
+    document.querySelector(".done").insertAdjacentHTML("beforeEnd", html);
+    html = "";
+    lists.toDo.forEach((item) => {
+        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
+    });
+    document.querySelector(".toDo").insertAdjacentHTML("beforeEnd", html);
+    html = "";
+    lists.inProgress.forEach((item) => {
+        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
+    });
+    document.querySelector(".inProgress").insertAdjacentHTML("beforeEnd", html);
 });

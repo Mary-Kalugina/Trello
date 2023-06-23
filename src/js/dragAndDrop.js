@@ -28,8 +28,9 @@ const onMouseUp = (e) => {
 };
 
 listContainer.addEventListener("mousedown", (e) => {
-  // e.preventDefault();
-  if (!e.target.closest("listItem")) return;
+    if (!e.target.closest("listItem")) return;
+
+  e.preventDefault();
 
   actualElement = e.target;
 
