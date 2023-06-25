@@ -1,9 +1,11 @@
 const { doc } = require("prettier");
-
-const listContainer = document.querySelector(".listContainer");
+import DragDrop from "./dragAndDrop";
 export const storedge = { done: [], toDo: [], inProgress: [] };
 
-listContainer.addEventListener("click", (e) => {
+let dragDrop = new DragDrop();
+const wrapper = document.querySelector(".wrapper");
+
+wrapper.addEventListener("click", (e) => {
   if (e.target.classList.contains("deleteBtn")) {
     e.target.closest(".listItem").remove();
     return;
@@ -28,10 +30,10 @@ listContainer.addEventListener("click", (e) => {
 
 function openCreateWindow(e) {
   let column = e.target.closest(".column");
-  let html = `<div class="createWindow">
+  let html = `<li class="createWindow list__card">
   <textarea class="input"></textarea>
     <button class="saveBtn">Add Card</button>
-    <button class="cross closeWindow"></button></div>`;
+    <button class="cross closeWindow"></button></li>`;
   column.insertAdjacentHTML("beforeEnd", html);
 }
 
@@ -41,9 +43,13 @@ function saveNewItem(e) {
     return;
   }
   let column = e.target.closest(".column");
-  let html = `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${inputValue}</div></div>`;
+  let html = `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${inputValue}</div></li>`;
   column.insertAdjacentHTML("beforeEnd", html);
   closeWindow(e);
+
+  if (!dragDrop.check) {
+    dragDrop.addListenerToCards();
+  }
 }
 
 function closeWindow(e) {
@@ -51,11 +57,3 @@ function closeWindow(e) {
   parent.querySelector(".addItem").classList.remove("hidden");
   e.target.closest(".createWindow").remove();
 }
-
-listContainer.addEventListener("mouseover", (e) => {
-  if (e.target.classList.contains("listItem")) {
-    let deleteBtn = e.target.querySelector(".deleteBtn");
-    deleteBtn.style.opacity = 1;
-    deleteBtn.visibility = "visible";
-  }
-});

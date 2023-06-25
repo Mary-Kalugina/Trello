@@ -1,26 +1,26 @@
 .listContainer {
     display: flex;
     position: relative;
+    margin: 0 auto;
 }
 
 .column {
     display: flex;
-    width: 300px;
     flex-direction: column;
-    margin: 10px;
 }
 
 .listItem {
     margin: 5px;
     background-color: wheat;
-    /* position: relative; */
+    position: relative;
     padding: 10px;
     border: 2px solid black;
     padding: 5px;
+    cursor: pointer;
 }
 
 .dragged {
-    position: absolute;
+    position: absolute !important;
     cursor: grabbing;
     z-index: 999;
     pointer-events: none;
@@ -40,7 +40,7 @@
     background-color: wheat;
 	right: 10px;
 	width: 20px;
-	height: 24px;
+	height: 23px;
 	opacity: 0.2;
 	cursor: pointer;
     transition: opacity ease 0.5s;
@@ -75,73 +75,48 @@
     padding: 5px;
 }
 
-.items {
-    list-style-type: none;
-    padding-left: 0;
-}
 
-.items-item {
-    border: 1px solid #999;
-    padding: 10px;
-    margin-bottom: -1px;
-    cursor: pointer;
-}
-
-.items-item:first-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.items-item:last-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.items-item.dragged {
-    border-radius: 10px;
-    position: absolute;
-    z-index: 999;
-    pointer-events: none;
-    background: #fff;
-}
-
-p {
-    color: black;
-}
-
-.file-container {
-    width: 200px;
-    height: 40px;
-    position: relative;
-}
-
-.overlapped {
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0; margin: 0;
-    opacity: 0.1;
+<-- NEW -->
+.hero {
     width: 100%;
+    min-height: 100vh;
 }
 
-.overlap {
-    position: absolute;
-    top: 0; left: 0; bottom: 0; right: 0; margin: 0;
-    width: 100%;
-    background: #eee;
-    border-radius: 5px;
-    line-height: 40px;
+.wrapper {
+    max-width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list__caption {
+    font-weight: bold;
+    color: #0747a6;
+}
+
+.list__cell {
+    flex-basis: calc(25% - 40px);
+    min-height: 150px;
+    margin: 20px;
+    list-style: none;
+    box-shadow: 0px 0px 7px 5px rgba(0,0,0,0.2);
+    overflow: hidden;
+    background-color:#f0f2f5;;
+}
+
+.list__card {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
     text-align: center;
+    /* min-height: 100%; */
+    cursor: all-scroll;
 }
 
-.text-preview {
-    height: 200px;
-    width: 100%;
-    border: 1px dashed black;
-    border-radius: 5px;
+.hovered {
+    background-color: #d1d8e2;
 }
 
-.drop-area {
-    height: 200px;
-    width: 100%;
-    border: 1px dashed red;
-    border-radius: 5px;
+.hide {
+    display: none;
 }

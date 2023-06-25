@@ -1,4 +1,6 @@
 import { storedge } from "./btnEvents";
+import DragDrop from "./dragAndDrop";
+let dragDrop = new DragDrop();
 
 window.addEventListener("beforeunload", () => {
   document
@@ -18,19 +20,25 @@ window.addEventListener("beforeunload", () => {
 
 window.addEventListener("load", () => {
   let lists = JSON.parse(localStorage.getItem("lists"));
+  dragDrop.addListenerToCells();
+  if (!lists) return;
   let html = "";
   lists.done.forEach((item) => {
-        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
-    });
-    document.querySelector(".done").insertAdjacentHTML("beforeEnd", html);
-    html = "";
-    lists.toDo.forEach((item) => {
-        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
-    });
-    document.querySelector(".toDo").insertAdjacentHTML("beforeEnd", html);
-    html = "";
-    lists.inProgress.forEach((item) => {
-        html += `<div class="listItem"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></div>`;
-    });
-    document.querySelector(".inProgress").insertAdjacentHTML("beforeEnd", html);
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+  });
+  document.querySelector(".done").insertAdjacentHTML("beforeEnd", html);
+  html = "";
+  lists.toDo.forEach((item) => {
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+  });
+  document.querySelector(".toDo").insertAdjacentHTML("beforeEnd", html);
+  html = "";
+  lists.inProgress.forEach((item) => {
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+  });
+  document.querySelector(".inProgress").insertAdjacentHTML("beforeEnd", html);
+
+  if (!dragDrop.check) {
+    dragDrop.addListenerToCards();
+  }
 });

@@ -1,41 +1,56 @@
-let listContainer = document.querySelector(".listContainer");
-let actualElement;
-
-listContainer.addEventListener("dragover", (e) => {
-  e.preventDefault();
-});
-
-listContainer.addEventListener("drop", (e) => {
-  e.preventDefault();
-});
-
-const onMouseOver = (e) => {
-  actualElement.style.top = e.clientY + "px";
-  actualElement.style.left = e.clientX + "px";
-};
-
-const onMouseUp = (e) => {
-  if (!e.target.closest("listItem")) return;
-  const mouseUpItem = e.target;
-
-  listContainer.insertBefore(actualElement, mouseUpItem);
-
-  actualElement.classList.remove("dragged");
-  actualElement = undefined;
-
-  document.documentElement.removeEventListener("mouseup", onMouseUp);
-  document.documentElement.removeEventListener("mouseover", onMouseOver);
-};
-
-listContainer.addEventListener("mousedown", (e) => {
-    if (!e.target.closest("listItem")) return;
-
-  e.preventDefault();
-
-  actualElement = e.target;
-
-  actualElement.classList.add("dragged");
-
-  document.documentElement.addEventListener("mouseup", onMouseUp);
-  document.documentElement.addEventListener("mouseover", onMouseOver);
-});
+export default class DragDrop {
+  constructor() {;
+    this.cells = document.querySelectorAll(".js-cell");
+    this.theCell; 
+    this.check = false;
+}
+   
+    dragStart (e) {
+      setTimeout(() => {
+        e.target.closest(".js-card").classList.add("hide");
+        this.theCell = e.target.closest(".js-card");
+      }, 0);
+    };
+  
+    dragEnd (e) {
+      e.target.closest(".js-card").classList.remove("hide");
+    };
+  
+    dragOver (evt) {
+      evt.preventDefault();
+    };
+  
+    dragEnter(evt) {
+      evt.preventDefault();
+      this.classList.add("hovered");
+    };
+  
+    dragLeave () {
+      this.classList.remove("hovered");
+    };
+  
+    dragDrop () {
+      console.log(this.theCell);
+      this.append(this.theCell);
+      this.classList.remove("hovered");
+      this.theCell = null;
+    };
+    
+    addListenerToCells() {
+        this.cells.forEach((cell) => {
+            cell.addEventListener("dragover", this.dragOver);
+            cell.addEventListener("dragenter", this.dragEnter);
+            cell.addEventListener("dragleave", this.dragLeave);
+            cell.addEventListener("drop", this.dragDrop);
+        });
+    }
+    
+    addListenerToCards() {
+        this.cards = document.querySelectorAll(".js-card");
+        this.cards.forEach((card) => {
+            card.addEventListener("dragstart", this.dragStart);
+            card.addEventListener("dragend", this.dragEnd);
+        });
+        this.check = true;
+    }
+}
