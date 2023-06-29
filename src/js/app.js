@@ -20,25 +20,31 @@ window.addEventListener("beforeunload", () => {
 
 window.addEventListener("load", () => {
   let lists = JSON.parse(localStorage.getItem("lists"));
-  dragDrop.addListenerToCells();
   if (!lists) return;
   let html = "";
   lists.done.forEach((item) => {
-    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross crossCard"></button><div class="item-item">${item}</div></li>`;
   });
   document.querySelector(".done").insertAdjacentHTML("beforeEnd", html);
   html = "";
   lists.toDo.forEach((item) => {
-    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross crossCard"></button><div class="item-item">${item}</div></li>`;
   });
   document.querySelector(".toDo").insertAdjacentHTML("beforeEnd", html);
   html = "";
   lists.inProgress.forEach((item) => {
-    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${item}</div></li>`;
+    html += `<li class="listItem list__card js-card"  draggable="true"><button class="cross crossCard"></button><div class="item-item">${item}</div></li>`;
   });
   document.querySelector(".inProgress").insertAdjacentHTML("beforeEnd", html);
-
-  if (!dragDrop.check) {
-    dragDrop.addListenerToCards();
-  }
 });
+
+//listen columns
+document.body.addEventListener("dragover", (e) => dragDrop.dragOver(e));
+document.body.addEventListener("dragenter", (e) => dragDrop.dragEnter(e));
+document.body.addEventListener("dragleave", (e) => dragDrop.dragLeave(e));
+document.body.addEventListener("drag", (e) => dragDrop.dragMove(e));
+document.body.addEventListener("drop", (e) => dragDrop.dragDrop(e));
+
+//listen cards
+document.body.addEventListener("dragstart", (e) => dragDrop.dragStart(e));
+document.body.addEventListener("dragend", (e) => dragDrop.dragEnd(e));

@@ -1,12 +1,10 @@
 const { doc } = require("prettier");
-import DragDrop from "./dragAndDrop";
 export const storedge = { done: [], toDo: [], inProgress: [] };
 
-let dragDrop = new DragDrop();
 const wrapper = document.querySelector(".wrapper");
 
 wrapper.addEventListener("click", (e) => {
-  if (e.target.classList.contains("deleteBtn")) {
+  if (e.target.classList.contains("crossCard")) {
     e.target.closest(".listItem").remove();
     return;
   }
@@ -14,7 +12,8 @@ wrapper.addEventListener("click", (e) => {
     if (document.querySelector(".createWindow")) {
       return;
     }
-    e.target.classList.add("hidden");
+    let li = e.target.closest("li");
+    li.classList.add("hidden");
     openCreateWindow(e);
     return;
   }
@@ -39,21 +38,15 @@ function openCreateWindow(e) {
 
 function saveNewItem(e) {
   let inputValue = e.target.previousElementSibling.value;
-  if (!inputValue) {
-    return;
-  }
+  if (!inputValue) return;
   let column = e.target.closest(".column");
-  let html = `<li class="listItem list__card js-card"  draggable="true"><button class="cross deleteBtn"></button><div class="item-item">${inputValue}</div></li>`;
+  let html = `<li class="listItem list__card js-card"  draggable="true"><button class="cross crossCard"></button><div class="item-item">${inputValue}</div></li>`;
   column.insertAdjacentHTML("beforeEnd", html);
   closeWindow(e);
-
-  if (!dragDrop.check) {
-    dragDrop.addListenerToCards();
-  }
 }
 
 function closeWindow(e) {
   let parent = e.target.closest(".column");
-  parent.querySelector(".addItem").classList.remove("hidden");
+  parent.querySelector(".addBtnContainer").classList.remove("hidden");
   e.target.closest(".createWindow").remove();
 }

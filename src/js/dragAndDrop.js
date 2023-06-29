@@ -1,56 +1,56 @@
 export default class DragDrop {
-  constructor() {;
+  constructor() {
     this.cells = document.querySelectorAll(".js-cell");
-    this.theCell; 
+    this.theCell = null;
     this.check = false;
-}
-   
-    dragStart (e) {
-      setTimeout(() => {
-        e.target.closest(".js-card").classList.add("hide");
-        this.theCell = e.target.closest(".js-card");
-      }, 0);
-    };
+    this.lastHovered = null;
+  }
+
+  dragStart(e) {
+    if (!e.target.classList.contains("js-card")) return;
+    this.theCell = e.target.closest(".js-card");
+    setTimeout(() => {
+      e.target.closest(".js-card").classList.add("hide");
+    }, 0);
+  }
+
+  dragEnd(e) {
+    if (!e.target.classList.contains("js-card")) return;
+    e.target.classList.remove("hide");
+  }
+
+  dragOver(evt) {
+    evt.preventDefault();
+  }
+
+  dragEnter(evt) {
+    if (!evt.target.classList.contains("column")) return;
+    evt.preventDefault();
+    evt.target.classList.add("hovered");
+  }
+//перетаскивание элемента
+  dragMove(e) {
+    let hovered = document.elementFromPoint(e.clientX, e.clientY);
+    let card = hovered.closest(".js-card");
+    if (card && card !== this.theCell) {
+      this.lastHovered = card;
+      card.classList.add("moved");
+      if (this.lastHovered && card !== this.lastHovered) {
+      card.classList.remove("moved");
+      }
+    }     
+  }
   
-    dragEnd (e) {
-      e.target.closest(".js-card").classList.remove("hide");
-    };
-  
-    dragOver (evt) {
-      evt.preventDefault();
-    };
-  
-    dragEnter(evt) {
-      evt.preventDefault();
-      this.classList.add("hovered");
-    };
-  
-    dragLeave () {
-      this.classList.remove("hovered");
-    };
-  
-    dragDrop () {
-      console.log(this.theCell);
-      this.append(this.theCell);
-      this.classList.remove("hovered");
-      this.theCell = null;
-    };
-    
-    addListenerToCells() {
-        this.cells.forEach((cell) => {
-            cell.addEventListener("dragover", this.dragOver);
-            cell.addEventListener("dragenter", this.dragEnter);
-            cell.addEventListener("dragleave", this.dragLeave);
-            cell.addEventListener("drop", this.dragDrop);
-        });
-    }
-    
-    addListenerToCards() {
-        this.cards = document.querySelectorAll(".js-card");
-        this.cards.forEach((card) => {
-            card.addEventListener("dragstart", this.dragStart);
-            card.addEventListener("dragend", this.dragEnd);
-        });
-        this.check = true;
-    }
+  dragLeave(evt) {
+    if (!evt.target.classList.contains("column")) return;
+    evt.target.classList.remove("hovered");
+  }
+
+  dragDrop(e) {
+    if (!e.target.classList.contains("column")) return;
+    const column = e.target;
+    column.append(this.theCell);
+    column.classList.remove("hovered");
+    this.theCell = null;
+  }
 }
